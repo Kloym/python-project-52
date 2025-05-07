@@ -5,7 +5,7 @@ install:
 	uv sync
 
 collectstatic:
-	uv run django-admin collectstatic
+	uv run manage.py collectstatic
 
 migrate:
 	uv run python manage.py makemigrations
