@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import os
 from pathlib import Path
 from dotenv import load_dotenv, find_dotenv
-import dj_database_url
 
 load_dotenv(find_dotenv())
 
@@ -29,7 +28,7 @@ SECRET_KEY = os.environ['SECRET_KEY']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['webserver', '127.0.0.1:8000']
+ALLOWED_HOSTS = ['webserver', '127.0.0.1']
 ALLOWED_HOSTS.extend(os.getenv("ALLOWED_HOSTS", "").split(","))
 
 
@@ -59,7 +58,7 @@ ROOT_URLCONF = "task_manager.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [os.path.join(BASE_DIR, 'templates')],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
