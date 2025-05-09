@@ -1,0 +1,29 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block title %}Пользователи{% endblock %}
+
+{% block content %}
+    <div class="container flex-grow-1">
+        <h1>Пользователи</h1>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Имя пользователя</th>
+                    <th>Полное имя</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.first_name }} {{ user.last_name }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

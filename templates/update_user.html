@@ -1,0 +1,48 @@
+{% extends 'index.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}Изменение пользователя{% endblock %}
+
+{% block content %}
+<div class="container wrapper flex-grow-1">
+    <h1 class="my-4">Изменение пользователя</h1>
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}success{% endif %}" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="id_first_name" class="form-label">Имя</label>
+            <input type="text" class="form-control" id="id_first_name" name="first_name" value="{{ form.first_name.value|default:user.first_name }}" placeholder="Имя" required>
+        </div>
+        <div class="mb-3">
+            <label for="id_last_name" class="form-label">Фамилия</label>
+            <input type="text" class="form-control" id="id_last_name" name="last_name" value="{{ form.last_name.value|default:user.last_name }}" placeholder="Фамилия" required>
+        </div>
+        <div class="mb-3">
+            <label for="id_username" class="form-label">Имя пользователя</label>
+            <input type="text" class="form-control" id="id_username" name="username" value="{{ form.username.value|default:user.username }}" placeholder="Имя пользователя" required>
+            <small class="form-text text-muted">Обязательное поле. Не более 150 символов. Только буквы, цифры и символы @/./+/-/_.</small>
+        </div>
+        <div class="mb-3">
+            <label for="id_password1" class="form-label">Пароль</label>
+            <input type="password" class="form-control" id="id_password1" name="password1" placeholder="Пароль">
+            <small class="form-text text-muted">Ваш пароль должен содержать как минимум 3 символа.</small>
+        </div>
+        <div class="mb-3">
+            <label for="id_password2" class="form-label">Подтверждение пароля</label>
+            <input type="password" class="form-control" id="id_password2" name="password2" placeholder="Подтверждение пароля">
+            <small class="form-text text-muted">Для подтверждения введите, пожалуйста, пароль ещё раз.</small>
+        </div>
+        <button type="submit" class="btn btn-primary">Изменить</button>
+        <a href="{% url 'user_list' %}" class="btn btn-secondary ms-2">Отмена</a>
+    </form>    
+</div>
+{% endblock %}
