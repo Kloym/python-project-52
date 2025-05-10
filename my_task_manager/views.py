@@ -5,7 +5,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.contrib.auth.password_validation import validate_password
-from .forms import UserForm
+from .forms import UserForm, StatusForm
+from .models import Status
 import re
 
 # Create your views here.
@@ -23,6 +24,10 @@ def logout_view(request):
 def user_list(request):
     users = User.objects.all()
     return render(request, 'user_list.html', {'users': users})
+
+def status_list(request):
+    statuses = Status.objects.all()
+    return render(request, 'status_list.html', {'statuses': statuses})
 
 def user_create(request):
     if request.method == 'POST':
@@ -109,4 +114,17 @@ def user_delete(request, pk):
         messages.success(request, 'Пользователь успешно удален')
         return redirect('user_list')
     return render(request, 'user_confirm_delete.html', {'user': user})
+
+def create_status(request):
+    if request.method == 'POST':
+        form = StatusForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('status_list')
+    else:
+        form = StatusForm()
+    return render(request, 'create_status.html', {'form': form})
+
+
+
 

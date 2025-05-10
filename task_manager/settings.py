@@ -38,15 +38,16 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 # Application definition
 
 INSTALLED_APPS = [
-    "django.contrib.admin",
-    "django.contrib.auth",
-    "django.contrib.contenttypes",
-    "django.contrib.sessions",
-    "django.contrib.messages",
-    "django.contrib.staticfiles",
-    'crispy_forms',
-    'crispy_bootstrap5'
-]
+       "django.contrib.admin",
+       "django.contrib.auth",
+       "django.contrib.contenttypes",
+       "django.contrib.sessions",
+       "django.contrib.messages",
+       "django.contrib.staticfiles",
+       'crispy_forms',
+       'crispy_bootstrap5',
+       'my_task_manager',
+   ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",

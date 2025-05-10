@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
+from .models import Status
 
 class UserForm(forms.ModelForm):
     password1 = forms.CharField(
@@ -46,3 +47,9 @@ class UserForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+    
+class StatusForm(forms.ModelForm):
+    class Meta:
+        model = Status
+        fields = ['name']
+

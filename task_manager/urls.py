@@ -29,4 +29,6 @@ urlpatterns = [
     path('users/<int:pk>/update/', views.user_update, name='update_user'),
     path('users/<int:pk>/delete/', views.user_delete, name='delete_user'),
     path('logout/', views.logout_view, name='logout'),
+    path('statuses/', views.status_list, name='status_list'),
+    path('statuses/create/', views.create_status, name='create_status')
 ]

@@ -1,0 +1,36 @@
+{% extends "login_index.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="container">
+    <h1>Статусы</h1>
+    <a href="#" class="btn btn-primary mb-3">Создать статус</a>
+
+    {% if statuses %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Имя</th>
+                    <th>Дата создания</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for status in statuses %}
+                <tr>
+                    <td>{{ status.id }}</td>
+                    <td style="width: 300px;">{{ status.name }}</td>
+                    <td>{{ status.created_at|date:"d.m.Y H:i" }}</td>
+                    <td>
+                        <a href="#" class="link-secondary">Изменить</a>
+                        <a href="#" class="link-secondary">Удалить</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Нет доступных статусов.</p>
+    {% endif %}
+</div>
+{% endblock %}
