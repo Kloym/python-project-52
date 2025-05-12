@@ -52,4 +52,10 @@ class StatusForm(forms.ModelForm):
     class Meta:
         model = Status
         fields = ['name']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control w-100', 'placeholder': 'Имя'}),
+        }
+        labels = {
+            'name': 'Имя'
+        }
 

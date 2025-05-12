@@ -30,5 +30,7 @@ urlpatterns = [
     path('users/<int:pk>/delete/', views.user_delete, name='delete_user'),
     path('logout/', views.logout_view, name='logout'),
     path('statuses/', views.status_list, name='status_list'),
-    path('statuses/create/', views.create_status, name='create_status')
+    path('statuses/create/', views.create_status, name='create_status'),
+    path('statuses/<int:pk>/delete/', views.status_delete, name='delete_status'),
+    path('statuses/<int:pk>/update/', views.status_update, name='update_status'),
 ]

@@ -4,24 +4,21 @@
 {% block title %}Создать статус{% endblock %}
 
 {% block content %}
-    <div class="container wrapper flex-grow-1">
-        <h1 class="my-4">Создать статус</h1>
-
-        <form method="POST">
-            {% csrf_token %}
-            <div class="mb-3">
-                <label for="{{ form.name.id_for_label }}" class="form-label">Имя</label>
-                {{ form.name }}  {# Удаляем |crispy #}
-                {% if form.name.errors %}
-                    <div class="alert alert-danger">
-                        {% for error in form.name.errors %}
-                            {{ error }}
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            </div>
-            <button type="submit" class="btn btn-primary">Создать</button>
-        </form>
-        <a href="{% url 'status_list' %}" class="btn btn-secondary mt-3">Назад к списку статусов</a>
-    </div>
+  <div class="container wrapper flex-grow-1">
+    <h1 class="my-4">Создать статус</h1>
+    <form method="POST" novalidate>
+      {% csrf_token %}
+      <div class="mb-3">
+        <label for="{{ form.name.id_for_label }}" class="form-label">Имя</label>
+        {{ form.name }}
+        {% if form.name.errors %}
+          <div class="invalid-feedback d-block">
+            {{ form.name.errors }}
+          </div>
+        {% endif %}
+      </div>
+      <button type="submit" class="btn btn-primary">Создать</button>
+    </form>
+    <a href="{% url 'status_list' %}" class="btn btn-secondary mt-3">Назад к списку статусов</a>
+  </div>
 {% endblock %}
