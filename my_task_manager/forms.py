@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import Status
+from .models import Status, Task
 
 class UserForm(forms.ModelForm):
     password1 = forms.CharField(
@@ -59,3 +59,17 @@ class StatusForm(forms.ModelForm):
             'name': 'Имя'
         }
 
+class TaskFilterForm(forms.Form):
+    status = forms.ModelChoiceField(
+        queryset=Task.objects.all(),
+        required=False,
+        label="Статус",
+        empty_label="---------"
+    )
+    assignee = forms.ModelChoiceField(
+        queryset=User.objects.all(),
+        required=False,
+        label="Исполнитель",
+        empty_label="---------"
+    )
+    only_my_tasks = forms.BooleanField(required=False, label="Только свои задачи")

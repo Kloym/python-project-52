@@ -1,12 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.contrib.auth.password_validation import validate_password
-from .forms import UserForm, StatusForm
-from .models import Status
+from .forms import UserForm, StatusForm, TaskFilterForm
+from .models import Status, Task
 import re
 
 # Create your views here.
@@ -28,6 +29,25 @@ def user_list(request):
 def status_list(request):
     statuses = Status.objects.all()
     return render(request, 'status_list.html', {'statuses': statuses})
+
+@login_required
+def task_list(request):
+    tasks = Task.objects.all()
+    if request.method == 'GET':
+        form = TaskFilterForm(request.GET)
+        if form.is_valid():
+            status = form.cleaned_data.get('status')
+            assignee = form.cleaned_data.get('assignee')
+            only_my_tasks = form.cleaned_data.get('only_my_tasks')
+            if status:
+                tasks = tasks.filter(status=status)
+            if assignee:
+                tasks = tasks.filter(assignee=assignee)
+            if only_my_tasks:
+                tasks = tasks.filter(author=request.user)
+    else:
+        form = TaskFilterForm()
+    return render(request, 'task_list.html', {'tasks': tasks, 'form': form})
 
 def user_create(request):
     if request.method == 'POST':
@@ -145,6 +165,7 @@ def status_update(request, pk):
     else:
         form = StatusForm(instance=status)
     return render(request, 'status_update.html', {'form': form, 'status': status})
+
 
 
 

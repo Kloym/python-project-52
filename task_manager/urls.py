@@ -33,4 +33,5 @@ urlpatterns = [
     path('statuses/create/', views.create_status, name='create_status'),
     path('statuses/<int:pk>/delete/', views.status_delete, name='delete_status'),
     path('statuses/<int:pk>/update/', views.status_update, name='update_status'),
+    path('tasks/', views.task_list, name='task_list')
 ]
