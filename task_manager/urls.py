@@ -16,22 +16,16 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from my_task_manager import views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path('', views.index, name='index'),
-    path('users/', views.user_list, name='user_list'),
-    path('users/create/', views.user_create, name='registration'),
+    path('', views. index, name='index'),
     path('login/', views.login_view, name='login'),
-    path('home/', views.login_index, name='login_index'),
-    path('users/<int:pk>/update/', views.user_update, name='update_user'),
-    path('users/<int:pk>/delete/', views.user_delete, name='delete_user'),
     path('logout/', views.logout_view, name='logout'),
-    path('statuses/', views.status_list, name='status_list'),
-    path('statuses/create/', views.create_status, name='create_status'),
-    path('statuses/<int:pk>/delete/', views.status_delete, name='delete_status'),
-    path('statuses/<int:pk>/update/', views.status_update, name='update_status'),
-    path('tasks/', views.task_list, name='task_list')
+    path('tasks/', include('tasks.urls')),
+    path('labels/', include('labels.urls')),
+    path('statuses/', include('statuses.urls')),
+    path('users/', include('users.urls')),
 ]

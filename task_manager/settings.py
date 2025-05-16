@@ -36,6 +36,9 @@ ALLOWED_HOSTS.extend(os.getenv("ALLOWED_HOSTS", "").split(","))
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'index'
+
 
 # Application definition
 
@@ -49,6 +52,10 @@ INSTALLED_APPS = [
        'crispy_forms',
        'crispy_bootstrap5',
        'my_task_manager',
+       'users',
+       'statuses',
+       'tasks',
+       'labels',
    ]
 
 MIDDLEWARE = [
