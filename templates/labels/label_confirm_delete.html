@@ -1,0 +1,16 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block title %}Удаление метки{% endblock %}
+
+{% block content %}
+  <div class="container mt-4">
+    <h1>Удалить метку</h1>
+    <p>Вы уверены, что хотите удалить метку &quot;{{ label.name }}&quot;?</p>
+    <form method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger">Удалить</button>
+      <a href="{% url 'label_list' %}" class="btn btn-secondary ms-2">Отмена</a>
+    </form>
+  </div>
+{% endblock %}

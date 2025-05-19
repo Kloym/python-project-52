@@ -18,21 +18,21 @@
         {% csrf_token %}
         <div class="mb-3">
             <label for="id_first_name" class="form-label">Имя</label>
-            <input type="text" class="form-control" id="id_first_name" name="first_name" value="{{ form.first_name.value }}" placeholder="Имя" required> 
+            <input type="text" class="form-control" id="id_first_name" name="first_name" placeholder="Имя" required> 
             {% for error in form.first_name.errors %}
                 <div class="alert alert-danger">{{ error }}</div>
             {% endfor %}
         </div>
         <div class="mb-3">
             <label for="id_last_name" class="form-label">Фамилия</label>
-            <input type="text" class="form-control" id="id_last_name" name="last_name" value="{{ form.last_name.value }}" placeholder="Фамилия" required>
+            <input type="text" class="form-control" id="id_last_name" name="last_name" placeholder="Фамилия" required>
             {% for error in form.last_name.errors %}
                 <div class="alert alert-danger">{{ error }}</div>
             {% endfor %}
         </div>
         <div class="mb-3">
             <label for="id_username" class="form-label">Имя пользователя</label>
-            <input type="text" class="form-control" id="id_username" name="username" value="{{ form.username.value }}" placeholder="Имя пользователя" required>
+            <input type="text" class="form-control" id="id_username" name="username" placeholder="Имя пользователя" required>
             <small class="form-text text-muted">Обязательное поле. Не более 150 символов. Только буквы, цифры и символы @/./+/-/_.</small>
             {% for error in form.username.errors %}
                 <div class="alert alert-danger">{{ error }}</div>

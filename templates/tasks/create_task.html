@@ -1,0 +1,39 @@
+{% extends 'index.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Создание задачи{% endblock %}
+
+{% block content %}
+  <div class="container">
+      <h1>Создать задачу</h1>
+    <form method="post">
+      {% csrf_token %}
+      <div class="ms-3">
+        {{ form.name|as_crispy_field }}
+      </div>
+      <div class="ms-3">
+        {{ form.description|as_crispy_field }}
+      </div>
+      <div class="ms-3">
+        {{ form.status|as_crispy_field }}
+      </div>
+      <div class="ms-3">
+        {{ form.assignee|as_crispy_field }}
+      </div>
+      <div class="ms-3 mb-3">
+        <label for="{{ form.labels.id_for_label }}">Метки</label>
+        <div class="border rounded p-2" style="overflow-y: auto; height: 100px;">
+            {% for label in form.labels %}
+                <div class="form-check p-0">
+                    {{ label }}
+                    <label class="form-check-label" for="{{ label.id_for_label }}">
+                        {{ label.label }}
+                    </label>
+                </div>
+            {% endfor %}
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary" style="margin-left: 15px;">Создать</button>
+    </form>
+  </div>
+{% endblock %}

@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import StatusForm
 from .models import Status
@@ -8,6 +9,7 @@ def status_list(request):
     statuses = Status.objects.all()
     return render(request, 'statuses/status_list.html', {'statuses': statuses})
 
+@login_required
 def create_status(request):
     if request.method == 'POST':
         form = StatusForm(request.POST)
@@ -19,6 +21,7 @@ def create_status(request):
         form = StatusForm()
     return render(request, 'statuses/create_status.html', {'form': form})
 
+@login_required
 def status_update(request, pk):
     status = get_object_or_404(Status, pk=pk)
     if request.method == 'POST':
@@ -31,6 +34,7 @@ def status_update(request, pk):
         form = StatusForm(instance=status)
     return render(request, 'statuses/status_update.html', {'form': form, 'status': status})
 
+@login_required
 def status_delete(request, pk):
     status = get_object_or_404(Status, pk=pk)
     if request.method == 'POST':
