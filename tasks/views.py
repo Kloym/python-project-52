@@ -1,32 +1,36 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
 from django.contrib import messages
 from .models import Task
 from .forms import TaskFilterForm
 from .forms import TaskCreateForm
 
+
 @login_required
 def task_list(request):
     tasks = Task.objects.all()
-    if request.method == 'GET':
-        form = TaskFilterForm(request.GET)
-        if form.is_valid():
-            only_my_tasks = form.cleaned_data.get('only_my_tasks')
-            status = form.cleaned_data.get('status')
-            assignee = form.cleaned_data.get('assignee')
-            labels = form.cleaned_data.get('labels')
-            if status:
-                tasks = tasks.filter(status=status)
-            if assignee:
-                tasks = tasks.filter(assignee=assignee)
-            if labels:
-                tasks = tasks.filter(labels=labels)
-            if only_my_tasks:
-                tasks = tasks.filter(author=request.user)
+    form = TaskFilterForm(request.GET or None)
+    filters_applied = False
+    if form.is_valid():
+        only_my_tasks = form.cleaned_data.get('only_my_tasks')
+        status = form.cleaned_data.get('status')
+        assignee = form.cleaned_data.get('assignee')
+        labels = form.cleaned_data.get('labels')
+
+        if status or assignee or labels or only_my_tasks:
+            filters_applied = True
+        if status:
+            tasks = tasks.filter(status=status)
+        if assignee:
+            tasks = tasks.filter(assignee=assignee)
+        if labels:
+            tasks = tasks.filter(labels_=labels)
+        if only_my_tasks:
+            tasks = tasks.filter(author=request.user)
     context = {
         'tasks': tasks,
         'form': form,
+        'filters_applied': filters_applied,
     }
     return render(request, 'tasks/task_list.html', context)
 

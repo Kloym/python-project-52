@@ -17,6 +17,8 @@ def create_status(request):
             form.save()
             messages.success(request, 'Статус успешно создан')
             return redirect('status_list')
+        else:
+            print(form.errors)
     else:
         form = StatusForm()
     return render(request, 'statuses/create_status.html', {'form': form})
@@ -30,6 +32,8 @@ def status_update(request, pk):
             form.save()
             messages.success(request, 'Статус успешно изменен')
             return redirect('status_list')
+        else:
+            print(form.errors)
     else:
         form = StatusForm(instance=status)
     return render(request, 'statuses/status_update.html', {'form': form, 'status': status})
