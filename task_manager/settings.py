@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
+
 import os
 from pathlib import Path
 from dotenv import load_dotenv, find_dotenv
@@ -24,46 +25,46 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ['SECRET_KEY']
-DATABASE_URL = os.environ.get('DATABASE_URL')
+SECRET_KEY = os.environ["SECRET_KEY"]
+DATABASE_URL = os.environ.get("DATABASE_URL")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['webserver', '127.0.0.1', 'python-project-52-dh1y.onrender.com']
+ALLOWED_HOSTS = ["webserver", "127.0.0.1", "python-project-52-dh1y.onrender.com"]
 ALLOWED_HOSTS.extend(os.getenv("ALLOWED_HOSTS", "").split(","))
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
-LOGIN_URL = 'login'
-LOGIN_REDIRECT_URL = 'index'
+LOGIN_URL = "login"
+LOGIN_REDIRECT_URL = "index"
 
 # Application definition
 
 ROLLBAR = {
-    'access_token': '1c32114498b14e5abe7371ed03bef342',
-    'environment': 'development' if DEBUG else 'production',
-    'code_version': '1.0',
-    'root': BASE_DIR,
+    "access_token": "1c32114498b14e5abe7371ed03bef342",
+    "environment": "development" if DEBUG else "production",
+    "code_version": "1.0",
+    "root": BASE_DIR,
 }
 
 INSTALLED_APPS = [
-       "django.contrib.admin",
-       "django.contrib.auth",
-       "django.contrib.contenttypes",
-       "django.contrib.sessions",
-       "django.contrib.messages",
-       "django.contrib.staticfiles",
-       'crispy_forms',
-       'crispy_bootstrap5',
-       'task_manager',
-       'my_task_manager',
-       'users',
-       'statuses',
-       'tasks',
-       'labels',
-   ]
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "crispy_forms",
+    "crispy_bootstrap5",
+    "task_manager",
+    "my_task_manager",
+    "users",
+    "statuses",
+    "tasks",
+    "labels",
+]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -73,7 +74,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    'rollbar.contrib.django.middleware.RollbarNotifierMiddleware',
+    "rollbar.contrib.django.middleware.RollbarNotifierMiddleware",
 ]
 
 ROOT_URLCONF = "task_manager.urls"
@@ -81,7 +82,7 @@ ROOT_URLCONF = "task_manager.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / 'templates'],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -103,13 +104,9 @@ DEFAULT_DATABASE = {
     "NAME": BASE_DIR / "db.sqlite3",
 }
 if DATABASE_URL:
-    DATABASES = {
-        'default': dj_database_url.config(default=DATABASE_URL)
-    }
+    DATABASES = {"default": dj_database_url.config(default=DATABASE_URL)}
 else:
-    DATABASES = {
-        'default': DEFAULT_DATABASE
-    }
+    DATABASES = {"default": DEFAULT_DATABASE}
 
 
 # Password validation
@@ -122,7 +119,7 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
         "OPTIONS": {
-            'min_length': 3,
+            "min_length": 3,
         },
     },
     # {
@@ -150,7 +147,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = "static/"
-STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
