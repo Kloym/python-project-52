@@ -5,7 +5,7 @@ install:
 	uv sync
 
 collectstatic:
-	uv run python manage.py collectstatic
+	uv run python manage.py collectstatic --no-input
 
 migrate:
 	uv run python manage.py makemigrations
@@ -16,3 +16,6 @@ build:
 
 render-start:
 	gunicorn task_manager.wsgi
+
+start:
+	uv run manage.py runserver 0.0.0.0:8000
