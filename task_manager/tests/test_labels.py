@@ -1,5 +1,5 @@
 from django.test import TestCase
-from labels.models import Label
+from task_manager.labels.models import Label
 from django.urls import reverse
 
 

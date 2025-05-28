@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .forms import LabelForm
 from .models import Label
-from tasks.models import Task
+from task_manager.tasks.models import Task
 
 
 def label_list(request):

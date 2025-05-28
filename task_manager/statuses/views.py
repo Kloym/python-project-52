@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .forms import StatusForm
-from .models import Status
+from task_manager.statuses.forms import StatusForm
+from task_manager.statuses.models import Status
 
 
 def status_list(request):
