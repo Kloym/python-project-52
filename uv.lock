@@ -314,7 +314,7 @@ wheels = [
 [[package]]
 name = "hexlet-code"
 version = "0.1.0"
-source = { virtual = "." }
+source = { editable = "." }
 dependencies = [
     { name = "crispy-bootstrap5" },
     { name = "dj-database-url" },
