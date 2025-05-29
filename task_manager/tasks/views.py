@@ -50,6 +50,7 @@ def create_task(request):
             messages.error(
                 request, "Ошибка при создании задачи. Пожалуйста, проверьте данные."
             )
+            print(form.errors)
     else:
         form = TaskCreateForm()
     return render(request, "tasks/create_task.html", {"form": form})

@@ -28,6 +28,10 @@ class TaskFilterForm(forms.Form):
 
 
 class TaskCreateForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['assignee'].queryset = User.objects.only('id', 'username')
+        
     class Meta:
         model = Task
         fields = ["name", "description", "status", "assignee", "labels"]
