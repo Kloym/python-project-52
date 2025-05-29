@@ -8,25 +8,23 @@ from task_manager.tasks.forms import TaskCreateForm
 
 @login_required
 def task_list(request):
-    tasks = Task.objects.all()
+    tasks = Task.objects.all().select_related('status', 'author', 'assignee').prefetch_related('labels')
     form = TaskFilterForm(request.GET or None)
     filters_applied = False
     if form.is_valid():
-        only_my_tasks = form.cleaned_data.get("only_my_tasks")
-        status = form.cleaned_data.get("status")
-        assignee = form.cleaned_data.get("assignee")
-        labels = form.cleaned_data.get("labels")
+        filters = {}
+        if form.cleaned_data.get("status"):
+            filters['status'] = form.cleaned_data["status"]
+        if form.cleaned_data.get("assignee"):
+            filters['assignee'] = form.cleaned_data["assignee"]
+        if form.cleaned_data.get("labels"):
+            filters['labels__in'] = form.cleaned_data["labels"]
+        if form.cleaned_data.get("only_my_tasks"):
+            filters['author'] = request.user
 
-        if status or assignee or labels or only_my_tasks:
+        if filters:
+            tasks = tasks.filter(**filters)
             filters_applied = True
-        if status:
-            tasks = tasks.filter(status=status)
-        if assignee:
-            tasks = tasks.filter(assignee=assignee)
-        if labels:
-            tasks = tasks.filter(labels_=labels)
-        if only_my_tasks:
-            tasks = tasks.filter(author=request.user)
     context = {
         "tasks": tasks,
         "form": form,
@@ -40,19 +38,24 @@ def create_task(request):
     if request.method == "POST":
         form = TaskCreateForm(request.POST)
         if form.is_valid():
-            task = form.save(commit=False)
-            task.author = request.user
-            task.save()
-            form.save_m2m()
-            messages.success(request, "Задача успешно создана")
-            return redirect("task_list")
+            try:
+                task = form.save(commit=False)
+                task.author = request.user
+                task.save()
+                form.save_m2m()
+                messages.success(request, "Задача успешно создана")
+                return redirect("task_list")
+            except Exception as e:
+                messages.error(request, f"Ошибка при сохранении задачи: {e}")
+                print(f"Ошибка при сохранении задачи: {e}")
         else:
             messages.error(
                 request, "Ошибка при создании задачи. Пожалуйста, проверьте данные."
             )
-            print(form.errors)
+            print("Ошибки формы:", form.errors)
     else:
         form = TaskCreateForm()
+
     return render(request, "tasks/create_task.html", {"form": form})
 
 

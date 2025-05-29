@@ -29,15 +29,6 @@ class TaskFilterForm(forms.Form):
 
 
 class TaskCreateForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        users_queryset = cache.get('all_users_queryset')
-        if users_queryset is None:
-            users_queryset = User.objects.only('id', 'username')
-            cache.set('all_users_queryset', users_queryset, 3600)
-
-        self.fields['assignee'].queryset = users_queryset
-
     class Meta:
         model = Task
         fields = ["name", "description", "status", "assignee", "labels"]
