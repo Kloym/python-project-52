@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 from task_manager.tasks.models import Task
 from task_manager.statuses.models import Status
 from task_manager.labels.models import Label
-from django.core.cache import cache
 
 
 class TaskFilterForm(forms.Form):
@@ -13,7 +12,7 @@ class TaskFilterForm(forms.Form):
         label="Статус",
         empty_label="---------",
     )
-    assignee = forms.ModelChoiceField(
+    executor = forms.ModelChoiceField(
         queryset=User.objects.all(),
         required=False,
         label="Исполнитель",
@@ -31,12 +30,12 @@ class TaskFilterForm(forms.Form):
 class TaskCreateForm(forms.ModelForm):
     class Meta:
         model = Task
-        fields = ["name", "description", "status", "assignee", "labels"]
+        fields = ["name", "description", "status", "executor", "labels"]
         labels = {
             "name": "Имя",
             "description": "Описание",
             "status": "Статус",
-            "assignee": "Исполнитель",
+            "executor": "Исполнитель",
             "labels": "Метки",
         }
         widgets = {

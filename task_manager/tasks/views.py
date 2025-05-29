@@ -8,15 +8,15 @@ from task_manager.tasks.forms import TaskCreateForm
 
 @login_required
 def task_list(request):
-    tasks = Task.objects.all().select_related('status', 'author', 'assignee').prefetch_related('labels')
+    tasks = Task.objects.all().select_related('status', 'author', 'executor').prefetch_related('labels')
     form = TaskFilterForm(request.GET or None)
     filters_applied = False
     if form.is_valid():
         filters = {}
         if form.cleaned_data.get("status"):
             filters['status'] = form.cleaned_data["status"]
-        if form.cleaned_data.get("assignee"):
-            filters['assignee'] = form.cleaned_data["assignee"]
+        if form.cleaned_data.get("executor"):
+            filters['executor'] = form.cleaned_data["executor"]
         if form.cleaned_data.get("labels"):
             filters['labels__in'] = form.cleaned_data["labels"]
         if form.cleaned_data.get("only_my_tasks"):
