@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from task_manager.tasks.models import Task
 from task_manager.statuses.models import Status
 from task_manager.labels.models import Label
+from django.core.cache import cache
 
 
 class TaskFilterForm(forms.Form):
@@ -30,8 +31,13 @@ class TaskFilterForm(forms.Form):
 class TaskCreateForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['assignee'].queryset = User.objects.only('id', 'username')
-        
+        users_queryset = cache.get('all_users_queryset')
+        if users_queryset is None:
+            users_queryset = User.objects.only('id', 'username')
+            cache.set('all_users_queryset', users_queryset, 3600)
+
+        self.fields['assignee'].queryset = users_queryset
+
     class Meta:
         model = Task
         fields = ["name", "description", "status", "assignee", "labels"]
