@@ -34,7 +34,8 @@
             {{ form.status|as_crispy_field }}
         </div>
         <div class="ms-3">
-            {{ form.executor|as_crispy_field }}
+          <label for="{{ form.executor.id_for_label }}">Исполнитель</label>
+          {{ form.executor|as_crispy_field }}
         </div>
         <div class="ms-3 mb-3">
             <label for="{{ form.labels.id_for_label }}">Метки</label>
