@@ -39,7 +39,9 @@ class TaskCreateForm(forms.ModelForm):
             "labels": "Метки",
         }
         widgets = {
-            "name": forms.TextInput(attrs={"placeholder": "Имя"}),
-            "description": forms.Textarea(attrs={"rows": 4, "placeholder": "Описание"}),
-            "labels": forms.CheckboxSelectMultiple(),
+            "name": forms.TextInput(attrs={"placeholder": "Имя", "id": "id_name"}),
+            "description": forms.Textarea(attrs={"rows": 4, "placeholder": "Описание", "id": "id_description"}),
+            "status": forms.Select(attrs={"id": "id_status"}),
+            "executor": forms.Select(attrs={"id": "id_executor"}),
+            "labels": forms.CheckboxSelectMultiple(attrs={"id": "id_labels"}),
         }
