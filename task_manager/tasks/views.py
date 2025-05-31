@@ -38,21 +38,12 @@ def create_task(request):
     if request.method == "POST":
         form = TaskCreateForm(request.POST)
         if form.is_valid():
-            try:
-                task = form.save(commit=False)
-                task.author = request.user
-                task.save()
-                form.save_m2m()
-                messages.success(request, "Задача успешно создана")
-                return redirect("task_list")
-            except Exception as e:
-                messages.error(request, f"Ошибка при сохранении задачи: {e}")
-                print(f"Ошибка при сохранении задачи: {e}")
-        else:
-            messages.error(
-                request, "Ошибка при создании задачи. Пожалуйста, проверьте данные."
-            )
-            print("Ошибки формы:", form.errors)
+            task = form.save(commit=False)
+            task.author = request.user
+            task.save()
+            form.save_m2m()
+            messages.success(request, "Задача успешно создана")
+            return redirect("task_list")
     else:
         form = TaskCreateForm()
 
