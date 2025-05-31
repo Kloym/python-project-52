@@ -40,6 +40,9 @@ def create_task(request):
         if form.is_valid():
             task = form.save(commit=False)
             task.author = request.user
+            if not task.executor:
+                messages.error(request, "Исполнитель обязателен.")
+                return render(request, "tasks/create_task.html", {"form": form})
             task.save()
             form.save_m2m()
             messages.success(request, "Задача успешно создана")

@@ -36,7 +36,8 @@ class TaskFilterForm(forms.Form):
 class TaskCreateForm(forms.ModelForm):
     executor = forms.ModelChoiceField(
         queryset=UserProxy.objects.all(),
-        label="Исполнитель"
+        label="Исполнитель",
+        required=True
     )
     class Meta:
         model = Task
