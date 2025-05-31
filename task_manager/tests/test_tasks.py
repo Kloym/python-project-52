@@ -54,3 +54,32 @@ class TestTask(TestCase):
         response = self.client.post(reverse("delete_task", args=[self.task.pk]))
         self.assertEqual(response.status_code, 302)
         self.assertFalse(Task.objects.filter(pk=self.task.pk).exists())
+
+
+class TaskTests(TestCase):
+    def setUp(self):
+        self.status = Status.objects.create(name="New")
+        self.author = User.objects.create_user(username='author', password='password')
+        self.executor = User.objects.create_user(username='executor', password='password')
+    def test_task_creation(self):
+        task = Task.objects.create(
+            name="Test Task",
+            description="Test Description",
+            status=self.status,
+            author=self.author,
+            executor=self.executor
+        )
+        self.assertEqual(Task.objects.count(), 1)
+
+    def test_no_tasks_after_creation(self):
+        self.assertEqual(Task.objects.count(), 0)
+
+    def test_task_creation_after_previous_test(self):
+        task = Task.objects.create(
+            name="Another Test Task",
+            description="Another Test Description",
+            status=self.status,
+            author=self.author,
+            executor=self.executor
+        )
+        self.assertEqual(Task.objects.count(), 1)
