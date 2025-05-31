@@ -8,7 +8,7 @@ from task_manager.tasks.forms import TaskCreateForm
 
 @login_required
 def task_list(request):
-    tasks = Task.objects.all().select_related('status', 'author', 'executor').prefetch_related('labels')
+    tasks = Task.objects.all().order_by('id')
     form = TaskFilterForm(request.GET or None)
     filters_applied = False
     if form.is_valid():
