@@ -4,6 +4,12 @@ from task_manager.tasks.models import Task
 from task_manager.statuses.models import Status
 from task_manager.labels.models import Label
 
+class UserProxy(User):
+    class Meta:
+        proxy = True
+
+    def __str__(self):
+        return self.get_full_name()
 
 class TaskFilterForm(forms.Form):
     status = forms.ModelChoiceField(
@@ -13,7 +19,7 @@ class TaskFilterForm(forms.Form):
         empty_label="---------",
     )
     executor = forms.ModelChoiceField(
-        queryset=User.objects.all(),
+        queryset=UserProxy.objects.all(),
         required=False,
         label="Исполнитель",
         empty_label="---------",
@@ -28,6 +34,10 @@ class TaskFilterForm(forms.Form):
 
 
 class TaskCreateForm(forms.ModelForm):
+    executor = forms.ModelChoiceField(
+        queryset=UserProxy.objects.all(),
+        label="Исполнитель"
+    )
     class Meta:
         model = Task
         fields = ["name", "description", "status", "executor", "labels"]
