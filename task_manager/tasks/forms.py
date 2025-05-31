@@ -1,4 +1,5 @@
 from django import forms
+from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 from task_manager.tasks.models import Task
 from task_manager.statuses.models import Status
@@ -56,3 +57,8 @@ class TaskCreateForm(forms.ModelForm):
             "executor": forms.Select(attrs={"id": "id_executor"}),
             "labels": forms.SelectMultiple(attrs={"id": "id_labels"}),
         }
+    def clean_name(self):
+        name = self.cleaned_data.get('name')
+        if Task.objects.filter(name=name).exists():
+            raise ValidationError('Task с таким Имя уже существует.')
+        return name
