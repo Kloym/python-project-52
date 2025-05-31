@@ -53,5 +53,5 @@ class TaskCreateForm(forms.ModelForm):
             "description": forms.Textarea(attrs={"rows": 4, "placeholder": "Описание", "id": "id_description"}),
             "status": forms.Select(attrs={"id": "id_status"}),
             "executor": forms.Select(attrs={"id": "id_executor"}),
-            "labels": forms.CheckboxSelectMultiple(attrs={"id": "id_labels"}),
+            "labels": forms.SelectMultiple(attrs={"id": "id_labels"}),
         }
