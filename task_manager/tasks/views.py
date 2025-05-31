@@ -46,7 +46,7 @@ def create_task(request):
             task.save()
             form.save_m2m()
             messages.success(request, "Задача успешно создана")
-            return redirect("task_list")
+            return redirect("get_task", task.id)
     else:
         form = TaskCreateForm()
 
