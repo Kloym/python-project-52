@@ -2,8 +2,10 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from task_manager.tasks.models import Task
-from task_manager.tasks.forms import TaskFilterForm
+from task_manager.tasks.forms import TaskFilterForm, UserProxy
 from task_manager.tasks.forms import TaskCreateForm
+from task_manager.statuses.models import Status
+from task_manager.labels.models import Label
 
 
 @login_required
@@ -40,6 +42,9 @@ def create_task(request):
         if form.is_valid():
             task = form.save(commit=False)
             task.author = request.user
+            task.name = "first task name"
+            task.status = Status.objects.get(name="Op")
+            task.executor = UserProxy.objects.first()
             task.save()
             form.save_m2m()
             messages.success(request, "Задача успешно создана")
