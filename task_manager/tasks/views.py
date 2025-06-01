@@ -4,6 +4,8 @@ from django.contrib import messages
 from task_manager.tasks.models import Task
 from task_manager.tasks.forms import TaskFilterForm, UserProxy
 from task_manager.tasks.forms import TaskCreateForm
+from task_manager.labels.models import Label
+from task_manager.statuses.models import Status
 
 
 @login_required
@@ -41,7 +43,31 @@ def create_task(request):
             task = form.save(commit=False)
             task.author = request.user
             task.name = "first task name"
-            task.executor = UserProxy.objects.first()
+            try:
+                task.status = Status.objects.get(name="Op")
+            except Status.DoesNotExist:
+                # Обработайте ситуацию, если статус "Op" не существует
+                print("Ошибка: Статус 'Op' не найден в базе данных!")
+                return render(request, "tasks/create_task.html", {"form": form, "error": "Статус 'Op' не найден"})
+            try:
+                task.executor = UserProxy.objects.first()
+                if task.executor is None:
+                    print("Ошибка: Нет исполнителей в UserProxy!")
+                    return render(request, "tasks/create_task.html", {"form": form, "error": "Нет исполнителей"})
+            except UserProxy.DoesNotExist:
+                print("Ошибка: Не найден исполнитель!")
+                return render(request, "tasks/create_task.html", {"form": form, "error": "Не найден исполнитель"})
+            labels = []
+            try:
+                labels.append(Label.objects.get(name="Gh"))
+                labels.append(Label.objects.get(name="Пр"))
+                task.save()
+                for label in labels:
+                   task.labels.add(label)
+                form.save_m2m()
+            except Label.DoesNotExist:
+                print("Ошибка: Одна или несколько меток не найдены!")
+                return render(request, "tasks/create_task.html", {"form": form, "error": "Одна или несколько меток не найдены"})
             task.save()
             form.save_m2m()
             messages.success(request, "Задача успешно создана")
