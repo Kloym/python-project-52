@@ -2,10 +2,12 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from task_manager.tasks.models import Task
-from task_manager.tasks.forms import TaskFilterForm, UserProxy
+from task_manager.tasks.forms import TaskFilterForm
 from task_manager.tasks.forms import TaskCreateForm
-from task_manager.labels.models import Label
-from task_manager.statuses.models import Status
+from django.views.generic import CreateView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
 
 
 @login_required
@@ -35,21 +37,21 @@ def task_list(request):
     return render(request, "tasks/task_list.html", context)
 
 
-@login_required
-def create_task(request):
-    if request.method == "POST":
-        form = TaskCreateForm(request.POST)
-        if form.is_valid():
-            task = form.save(commit=False)
-            task.author = request.user
-            task.save()
-            form.save_m2m()
-            messages.success(request, "Задача успешно создана")
-            return redirect("task_list")
-    else:
-        form = TaskCreateForm()
+class TaskCreateView(LoginRequiredMixin, CreateView):
+    model = Task
+    form_class = TaskCreateForm
+    template_name = 'tasks/create_task.html'
+    success_url = reverse_lazy('task_list')
 
-    return render(request, "tasks/create_task.html", {"form": form})
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_update'] = False
+        return context
+    
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        messages.success(self.request, _("Задача успешно создана"))
+        return super().form_valid(form)
 
 
 @login_required
