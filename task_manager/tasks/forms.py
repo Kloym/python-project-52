@@ -38,7 +38,12 @@ class TaskCreateForm(forms.ModelForm):
     executor = forms.ModelChoiceField(
         queryset=UserProxy.objects.all(),
         label="Исполнитель",
-        required=True
+        required=False
+    )
+    labels = forms.ModelMultipleChoiceField(
+        queryset=Label.objects.all(),
+        required=False,
+        label="Метки",
     )
     class Meta:
         model = Task
@@ -62,3 +67,9 @@ class TaskCreateForm(forms.ModelForm):
         if Task.objects.filter(name=name).exists():
             raise ValidationError('Task с таким Имя уже существует.')
         return name
+    
+    def clean_status(self):
+        status = self.cleaned_data.get('status')
+        if not status:
+            raise ValidationError('Статус обязателен.')
+        return status

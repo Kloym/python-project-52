@@ -6,14 +6,14 @@ from task_manager.labels.models import Label
 
 class Task(models.Model):
     name = models.CharField(max_length=100)
-    description = models.TextField()
+    description = models.TextField(blank=True)
     status = models.ForeignKey(Status, on_delete=models.CASCADE)
     labels = models.ManyToManyField(Label)
     author = models.ForeignKey(
         User, related_name="task_created", on_delete=models.CASCADE, default=1
     )
     executor = models.ForeignKey(
-        User, related_name="task_executor", on_delete=models.CASCADE
+        User, related_name="task_executor", on_delete=models.CASCADE, null=True, blank=True
     )
     created_at = models.DateTimeField(auto_now_add=True)
 
