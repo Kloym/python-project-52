@@ -39,7 +39,7 @@ class StatusUpdateView(LoginRequiredMixin, UpdateView):
         return context
     
     def form_valid(self, form):
-        messages.success(self.request, _("Статус успешно обновлен"))
+        messages.success(self.request, _("Статус успешно изменен"))
         return super().form_valid(form)
     
 class StatusDeleteView(LoginRequiredMixin, DeleteView):
