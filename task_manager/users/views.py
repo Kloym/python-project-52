@@ -61,7 +61,7 @@ class UserDeleteView(DeleteView):
     def dispatch(self, request, *args, **kwargs):
         user = self.get_object()
         if user != request.user:
-            messages.error(request, _('''У вас нет прав на изменение другого пользователя.'''))
+            messages.error(request, _('''У вас нет прав для изменения другого пользователя.'''))
             return redirect('user_list')
         return super().dispatch(request, *args, **kwargs)
     
