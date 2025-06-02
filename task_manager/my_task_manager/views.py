@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import logout
+from django.contrib import messages
+from django.contrib.auth.views import LoginView
+from django.urls import reverse_lazy
 from django.contrib import messages
 
 
@@ -14,23 +16,11 @@ def logout_view(request):
     messages.info(request, "Вы разлогинены")
     return redirect("index")
 
+class CustomLoginView(LoginView):
+    template_name = 'login.html'
+    success_url = reverse_lazy('user_list')
+    redirect_authenticated_user = True
 
-def login_view(request):
-    form = AuthenticationForm()
-    if request.method == "POST":
-        form = AuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-            username = form.cleaned_data["username"]
-            password = form.cleaned_data["password"]
-            user = authenticate(request, username=username, password=password)
-            if user is not None:
-                login(request, user)
-                messages.success(request, "Вы залогинены")
-                return redirect("index")
-            else:
-                messages.error(request, "Неверное имя пользователя или пароль")
-    else:
-        if "next" in request.GET:
-            messages.error(request, "Вы не авторизованы! Пожалуйста, выполните вход.")
-
-    return render(request, "login.html", {"form": form})
+    def form_invalid(self, form):
+        messages.error(self.request, "Неверное имя пользователя или пароль")
+        return super().form_invalid(form)

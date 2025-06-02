@@ -43,3 +43,11 @@ class UserRegistrationForm(forms.ModelForm):
                     "password1", "Ваш пароль должен содержать как минимум 3 символа"
                 )
         return cleaned_data
+    
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        password = self.cleaned_data.get("password1")
+        user.set_password(password)
+        if commit:
+            user.save()
+        return user
