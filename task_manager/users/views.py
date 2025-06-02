@@ -25,7 +25,9 @@ class UserCreateView(CreateView):
         return context
 
     def form_valid(self, form):
-        messages.success(self.request, _("Пользователь успешно зарегистрирован"))
+        messages.success(self.request, _(
+            "Пользователь успешно зарегистрирован")
+        )
         return super().form_valid(form)
 
 
