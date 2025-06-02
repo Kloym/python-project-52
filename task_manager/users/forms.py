@@ -1,53 +1,75 @@
 from django.core.exceptions import ValidationError
 from django import forms
 from django.contrib.auth.models import User
-import re
+from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.forms import (
+    UserCreationForm,
+)
 
 
-class UserRegistrationForm(forms.ModelForm):
-    password1 = forms.CharField(widget=forms.PasswordInput, label="Пароль")
-    password2 = forms.CharField(
-        widget=forms.PasswordInput, label="Подтверждение пароля"
+class UserRegistrationForm(UserCreationForm):
+    password1 = forms.CharField(
+        label=_("Password"),
+        widget=forms.PasswordInput(attrs={'label': _('Пароль'), 
+                                          'placeholder': _('Пароль'), 
+                                          'class': 'form-control'}),
+        help_text=_("Ваш пароль должен содержать как минимум 3 символа."),
     )
 
+    password2 = forms.CharField(
+        label=_("Password confirmation"),
+        widget=forms.PasswordInput(attrs={'label': _('Подтверждение пароля'), 
+                                          'placeholder': _('Подтверждение пароля'), 
+                                          'class': 'form-control'}),
+        help_text=_("Для подтверждения введите, пожалуйста, пароль ещё раз."),
+    )
     class Meta:
         model = User
-        fields = ["username", "first_name", "last_name"]
+        fields = ('first_name', 
+                  'last_name', 
+                  'username', 
+                  'password1', 
+                  'password2')
+
         labels = {
-            "first_name": "Имя",
-            "last_name": "Фамилия",
-            "username": "Имя пользователя",
+            'first_name': _('Имя'),
+            'last_name': _('Фамилия'),
+            'username': _('Имя пользователя'),
         }
 
-    def clean_username(self):
-        username = self.cleaned_data.get("username")
-        if not username:
-            raise ValidationError("Имя пользователя обязательно")
-        if len(username) > 150:
-            raise ValidationError("Имя пользователя не должно превышать 150 символов")
-        if not re.match(r"^[\w.@+-]+$", username):
-            raise ValidationError("Имя пользователя содержит недопустимые символы")
-        if User.objects.filter(username=username).exists():
-            raise ValidationError("Пользователь с таким именем уже существует")
-        return username
+        help_texts = {
+            'username': _(
+                '''Обязательное поле. Не более 150 символов. Только буквы, цифры и символы @/./+/-/_.'''
+            ),
+        }
+        widgets = {
+            'username': forms.TextInput(attrs={
+                'placeholder': _('Имя пользователя'),
+                'class': 'form-control',
+            }),
+            'first_name': forms.TextInput(attrs={
+                'placeholder': _('Имя'),
+                'class': 'form-control',
+            }),
+            'last_name': forms.TextInput(attrs={
+                'placeholder': _('Фамилия'),
+                'class': 'form-control',
+            }),
+        }
 
+    def clean_password1(self):
+        password1 = self.cleaned_data.get("password1")
+        if password1 and len(password1) < 3:
+            raise forms.ValidationError(_('''Ваш пароль должен содержать как минимум 3 символа.'''))
+        return password1
+    
     def clean(self):
         cleaned_data = super().clean()
-        password1 = cleaned_data.get("password1")
+        password1 = cleaned_data.get('password1')
         password2 = cleaned_data.get("password2")
-        if password1 and password2:
-            if password1 != password2:
-                self.add_error("password2", "Пароли не совпадают")
-            if len(password1) < 3:
-                self.add_error(
-                    "password1", "Ваш пароль должен содержать как минимум 3 символа"
-                )
+        if password1 and password2 and password1 != password2:
+            raise ValidationError(_("Пароли не совпадают"))
         return cleaned_data
     
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        password = self.cleaned_data.get("password1")
-        user.set_password(password)
-        if commit:
-            user.save()
-        return user
+    def _post_clean(self):
+        super(forms.ModelForm, self)._post_clean() 
