@@ -1,53 +1,74 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import redirect
 from django.contrib.auth.models import User
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import UserRegistrationForm
+from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
+from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
 
 # Create your views here.
-def user_list(request):
-    users = User.objects.all()
-    return render(request, "users/user_list.html", {"users": users})
+class IndexView(ListView):
+    model = User
+    template_name = 'users/user_list.html'
+    context_object_name = 'users'
 
 
-def user_create(request):
-    if request.method == "POST":
-        form = UserRegistrationForm(request.POST)
-        if form.is_valid():
-            user = form.save(commit=False)
-            user.set_password(form.cleaned_data["password1"])
-            user.save()
-            messages.success(request, "Пользователь успешно зарегистрирован")
-            return redirect("login")
-        else:
-            for field, errors in form.errors.items():
-                for error in errors:
-                    messages.error(request, error)
-    else:
-        form = UserRegistrationForm()
-    return render(request, "registration.html", {"form": form})
+class UserCreateView(CreateView):
+    form_class = UserRegistrationForm
+    template_name = 'registration.html'
+    success_url = reverse_lazy('login')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_update'] = False
+        return context
+    
+    def form_valid(self, form):
+        messages.success(self.request, _("Пользователь успешно зарегистрирован"))
+        return super().form_valid(form)
 
 
-@login_required
-def user_update(request, pk):
-    user = get_object_or_404(User, pk=pk)
-    if request.method == "POST":
-        form = UserRegistrationForm(request.POST, instance=user)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Пользователь успешно изменен")
-            return redirect("user_list")
-    else:
-        form = UserRegistrationForm(instance=user)
-    return render(request, "users/update_user.html", {"form": form})
+class UserUpdateView(UpdateView):
+    model = User
+    form_class = UserRegistrationForm
+    template_name = 'users/update_user.html'
+    success_url = reverse_lazy('user_list')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_update'] = True
+        return context
+    
+    def dispatch(self, request, *args, **kwargs):
+        obj = self.get_object()
+        if obj != request.user:
+            messages.error(request, _('''У вас нет прав на изменение другого пользователя.'''))
+            return redirect('user_list')
+        return super().dispatch(request, *args, **kwargs)
+    
+    def form_valid(self, form):
+        messages.success(self.request, _('Пользователь успешно изменен'))
+        return super().form_valid(form)
 
 
-@login_required
-def user_delete(request, pk):
-    user = get_object_or_404(User, pk=pk)
-    if request.method == "POST":
-        user.delete()
-        messages.success(request, "Пользователь успешно удален")
-        return redirect("user_list")
-    return render(request, "users/user_confirm_delete.html", {"user": user})
+class UserDeleteView(DeleteView):
+    model = User
+    template_name = 'users/user_confirm_delete.html'
+    success_url = reverse_lazy('user_list')
+    context_object_name = 'user'
+
+    def dispatch(self, request, *args, **kwargs):
+        user = self.get_object()
+        if user != request.user:
+            messages.error(request, _('''У вас нет прав на изменение другого пользователя.'''))
+            return redirect('user_list')
+        return super().dispatch(request, *args, **kwargs)
+    
+    def form_valid(self, form):
+        user = self.get_object()
+        if user.tasks_created.exists():
+            messages.error(self.request, _('''Нельзя удалить пользователя так как он используется'''))
+            return redirect(self.success_url)
+        messages.success(self.request, _('Пользователь успешно удален'))
+        return super().form_valid(form)
