@@ -16,14 +16,16 @@ def logout_view(request):
     messages.info(request, "Вы разлогинены")
     return redirect("index")
 
+
 class CustomLoginView(LoginView):
-    template_name = 'login.html'
-    success_url = reverse_lazy('user_list')
+    template_name = "login.html"
+    success_url = reverse_lazy("user_list")
     redirect_authenticated_user = True
+
     def form_valid(self, form):
         messages.success(self.request, "Вы залогинены")
         return super().form_valid(form)
-    
+
     def form_invalid(self, form):
         messages.error(self.request, "Неверное имя пользователя или пароль")
         return super().form_invalid(form)
