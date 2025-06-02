@@ -77,8 +77,9 @@ class UserDeleteView(DeleteView):
         user = self.get_object()
         if user.tasks_created.exists():
             messages.error(
-                self.request,
-                _("""Нельзя удалить пользователя так как он используется"""),
+                self.request, _(
+                    """Нельзя удалить пользователя так как он используется"""
+                ),
             )
             return redirect(self.success_url)
         messages.success(self.request, _("Пользователь успешно удален"))

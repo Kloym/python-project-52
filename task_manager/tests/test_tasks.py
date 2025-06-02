@@ -8,7 +8,9 @@ from django.urls import reverse
 
 class TestTask(TestCase):
     def setUp(self):
-        self.user = User.objects.create_user(username="testuser", password="testpass")
+        self.user = User.objects.create_user(
+            username="testuser", password="testpass"
+        )
         self.client.login(username="testuser", password="testpass")
         self.status = Status.objects.create(name="In Progress")
         self.label = Label.objects.create(name="Important")
@@ -67,7 +69,7 @@ class TaskTests(TestCase):
         )
 
     def test_task_creation(self):
-        task = Task.objects.create(
+        Task.objects.create(
             name="Test Task",
             description="Test Description",
             status=self.status,
