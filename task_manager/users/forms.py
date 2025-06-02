@@ -34,7 +34,9 @@ class UserRegistrationForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ("first_name", "last_name", "username", "password1", "password2")
+        fields = (
+            "first_name", "last_name", "username", "password1", "password2"
+        )
 
         labels = {
             "first_name": _("Имя"),
@@ -44,7 +46,8 @@ class UserRegistrationForm(UserCreationForm):
 
         help_texts = {
             "username": _(
-                """Обязательное поле. Не более 150 символов. Только буквы, цифры и символы @/./+/-/_."""
+                "Обязательное поле. Не более 150 символов. "
+                "Только буквы, цифры и символы @/./+/-/_."
             ),
         }
         widgets = {

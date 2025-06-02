@@ -44,7 +44,9 @@ class UserUpdateView(UpdateView):
         obj = self.get_object()
         if obj != request.user:
             messages.error(
-                request, _("""У вас нет прав на изменение другого пользователя.""")
+                request, _(
+                    """У вас нет прав на изменение другого пользователя."""
+                )
             )
             return redirect("user_list")
         return super().dispatch(request, *args, **kwargs)
@@ -64,7 +66,9 @@ class UserDeleteView(DeleteView):
         user = self.get_object()
         if user != request.user:
             messages.error(
-                request, _("""У вас нет прав для изменения другого пользователя.""")
+                request, _(
+                    """У вас нет прав для изменения другого пользователя."""
+                )
             )
             return redirect("user_list")
         return super().dispatch(request, *args, **kwargs)

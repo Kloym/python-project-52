@@ -33,6 +33,8 @@ class TestsLables(TestCase):
         self.assertEqual(self.label.name, "Update Label")
 
     def test_delete_label(self):
-        responce = self.client.post(reverse("delete_label", args=[self.label.pk]))
+        responce = self.client.post(
+            reverse("delete_label", args=[self.label.pk])
+        )
         self.assertEqual(responce.status_code, 302)
         self.assertFalse(Label.objects.filter(pk=self.label.pk).exists())

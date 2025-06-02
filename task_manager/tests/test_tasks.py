@@ -59,7 +59,9 @@ class TestTask(TestCase):
 class TaskTests(TestCase):
     def setUp(self):
         self.status = Status.objects.create(name="New")
-        self.author = User.objects.create_user(username="author", password="password")
+        self.author = User.objects.create_user(
+            username="author", password="password"
+        )
         self.executor = User.objects.create_user(
             username="executor", password="password"
         )
@@ -78,7 +80,7 @@ class TaskTests(TestCase):
         self.assertEqual(Task.objects.count(), 0)
 
     def test_task_creation_after_previous_test(self):
-        task = Task.objects.create(
+        Task.objects.create(
             name="Another Test Task",
             description="Another Test Description",
             status=self.status,

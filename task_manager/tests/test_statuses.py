@@ -6,7 +6,9 @@ from django.urls import reverse
 
 class TestsStatuses(TestCase):
     def setUp(self):
-        self.user = User.objects.create_user(username="testuser", password="testpass")
+        self.user = User.objects.create_user(
+            username="testuser", password="testpass"
+        )
         self.client.login(username="testuser", password="testpass")
         self.status = Status.objects.create(name="Mno1b")
 
@@ -32,6 +34,8 @@ class TestsStatuses(TestCase):
         self.assertEqual(self.status.name, "ghytr3")
 
     def test_delete_status(self):
-        response = self.client.post(reverse("delete_status", args=[self.status.pk]))
+        response = self.client.post(
+            reverse("delete_status", args=[self.status.pk])
+        )
         self.assertEqual(response.status_code, 302)
         self.assertFalse(Status.objects.filter(pk=self.status.pk).exists())
