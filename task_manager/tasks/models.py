@@ -1,22 +1,22 @@
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
 from task_manager.statuses.models import Status
-from task_manager.labels.models import Label
 
 
 class Task(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=50)
     description = models.TextField(blank=True)
-    status = models.ForeignKey(Status, on_delete=models.CASCADE)
-    labels = models.ManyToManyField(Label, null=True, blank=True)
-    author = models.ForeignKey(
-        User, related_name="task_created", on_delete=models.CASCADE, default=1
-    )
-    executor = models.ForeignKey(
-        User, related_name="task_executor", on_delete=models.CASCADE, null=True, blank=True
-    )
+    status = models.ForeignKey(Status, on_delete=models.PROTECT)
+    author = models.ForeignKey(User, 
+                               on_delete=models.CASCADE, 
+                               related_name='tasks_created')
+    executor = models.ForeignKey(User, 
+                                 on_delete=models.PROTECT, 
+                                 null=True, blank=True, 
+                                 related_name='tasks_assigned')
+    labels = models.ManyToManyField('labels.Label', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-
+    
     def __str__(self):
         return self.name
 
